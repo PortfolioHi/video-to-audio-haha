@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="zh-MY">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>多功能小工具箱</title>
-  <!-- 引入纯轻量 QR Code 生成库 -->
+  <title>Multi-Tool Box</title>
+  <!-- Lightweight QR Code Generator Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
     * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background: #f0f2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
     .card { background: #fff; width: 100%; max-width: 480px; border-radius: 16px; padding: 24px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); text-align: center; }
     
-    /* 分页导航 */
+    /* Tab Navigation */
     .tabs { display: flex; background: #eef2f6; border-radius: 10px; padding: 4px; margin-bottom: 24px; }
     .tab-btn { flex: 1; padding: 10px; border: none; background: transparent; font-size: 14px; font-weight: 600; color: #666; border-radius: 8px; cursor: pointer; transition: 0.2s; }
     .tab-btn.active { background: #fff; color: #007aff; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
@@ -19,14 +19,14 @@
     .section { display: none; }
     .section.active { display: block; }
 
-    /* 通用控件 */
+    /* General Controls */
     h2 { margin-top: 0; color: #1a1a1a; font-size: 20px; }
     p.sub { color: #666; font-size: 13px; margin-bottom: 20px; }
     button { background: #007aff; color: #fff; border: none; padding: 12px 20px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; width: 100%; transition: 0.2s; }
     button:disabled { background: #ccc; cursor: not-allowed; }
     button:hover:not(:disabled) { background: #005ecb; }
 
-    /* MP4 转音频样式 */
+    /* MP4 to Audio */
     .drop-zone { border: 2px dashed #007aff; border-radius: 12px; padding: 30px 20px; cursor: pointer; transition: 0.2s; background: #f8fbff; }
     .drop-zone:hover { background: #eef6ff; }
     .drop-zone p { margin: 8px 0 0; color: #444; font-size: 14px; }
@@ -34,7 +34,7 @@
     .file-info { margin: 16px 0; font-size: 13px; color: #555; word-break: break-all; }
     .status { margin-top: 14px; font-size: 13px; color: #666; font-weight: 500; }
 
-    /* QR Code 样式 */
+    /* QR Code */
     input[type="text"] { width: 100%; padding: 12px; border: 1.5px solid #dcdfe6; border-radius: 8px; font-size: 14px; margin-bottom: 16px; outline: none; }
     input[type="text"]:focus { border-color: #007aff; }
     #qrcode { display: flex; justify-content: center; margin: 20px 0; min-height: 160px; align-items: center; }
@@ -47,41 +47,41 @@
 <body>
 
 <div class="card">
-  <!-- Tab 切换按钮 -->
+  <!-- Tab Buttons -->
   <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab('mp4-tab', this)">🎬 MP4 转 MP3</button>
-    <button class="tab-btn" onclick="switchTab('qr-tab', this)">📱 QR Code 生成</button>
+    <button class="tab-btn active" onclick="switchTab('mp4-tab', this)">🎬 MP4 to MP3</button>
+    <button class="tab-btn" onclick="switchTab('qr-tab', this)">📱 QR Code Generator</button>
   </div>
 
-  <!-- SECTION 1: MP4 转音频 -->
+  <!-- SECTION 1: MP4 to Audio -->
   <div id="mp4-tab" class="section active">
-    <h2>MP4 转 MP3 / 音频</h2>
-    <p class="sub">本地直接抽声，不用上传，安全又快</p>
+    <h2>MP4 to MP3 / Audio</h2>
+    <p class="sub">Extract audio locally, no upload needed — fast & secure</p>
     <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
       <span>📁</span>
-      <p>点击或把 MP4 拖放进来</p>
+      <p>Click or drag & drop MP4 file here</p>
       <input type="file" id="fileInput" accept="video/mp4,video/*" style="display: none;">
     </div>
     <div class="file-info" id="fileInfo"></div>
-    <button id="convertBtn" disabled>开始转换并下载</button>
+    <button id="convertBtn" disabled>Convert & Download</button>
     <div class="status" id="status"></div>
   </div>
 
-  <!-- SECTION 2: QR Code 生成 -->
+  <!-- SECTION 2: QR Code Generator -->
   <div id="qr-tab" class="section">
-    <h2>QR Code 制作器</h2>
-    <p class="sub">输入 Link、文字或电话号码，马上搞定</p>
-    <input type="text" id="qrText" placeholder="Paste 你的网址或内容在这里...">
+    <h2>QR Code Generator</h2>
+    <p class="sub">Enter URL, text, or phone number to generate instantly</p>
+    <input type="text" id="qrText" placeholder="Paste your link or text here...">
     <div class="qr-actions">
-      <button onclick="makeQR()">生成 QR</button>
-      <button class="btn-secondary" id="dlQrBtn" onclick="downloadQR()" disabled>下载 QR</button>
+      <button onclick="makeQR()">Generate QR</button>
+      <button class="btn-secondary" id="dlQrBtn" onclick="downloadQR()" disabled>Download QR</button>
     </div>
     <div id="qrcode"></div>
   </div>
 </div>
 
 <script>
-  // Tab 切换逻辑
+  // Tab Switch Logic
   function switchTab(tabId, btn) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -89,17 +89,17 @@
     document.getElementById(tabId).classList.add('active');
   }
 
-  // --- QR Code 逻辑 ---
+  // --- QR Code Logic ---
   let qrCodeObj = null;
 
   function makeQR() {
     const text = document.getElementById('qrText').value.trim();
     if (!text) {
-      alert('请先写一点东西或放 Link 进输入框！');
+      alert('Please enter some text or paste a link first!');
       return;
     }
     const container = document.getElementById('qrcode');
-    container.innerHTML = ''; // 清除旧的
+    container.innerHTML = ''; // Clear previous
 
     qrCodeObj = new QRCode(container, {
       text: text,
@@ -124,7 +124,7 @@
     document.body.removeChild(a);
   }
 
-  // --- MP4 转换逻辑 ---
+  // --- MP4 Conversion Logic ---
   const fileInput = document.getElementById('fileInput');
   const dropZone = document.getElementById('dropZone');
   const fileInfo = document.getElementById('fileInfo');
@@ -139,7 +139,7 @@
   dropZone.addEventListener('drop', (e) => {
     const files = e.dataTransfer.files;
     if (files.length && files[0].type.includes('video')) handleFile(files[0]);
-    else alert('请丢 MP4 影片文件！');
+    else alert('Please drop an MP4 video file!');
   });
 
   fileInput.addEventListener('change', (e) => {
@@ -148,7 +148,7 @@
 
   function handleFile(file) {
     selectedFile = file;
-    fileInfo.innerText = `已选: ${file.name} (${(file.size / (1024 * 1024)).toFixed(2)} MB)`;
+    fileInfo.innerText = `Selected: ${file.name} (${(file.size / (1024 * 1024)).toFixed(2)} MB)`;
     convertBtn.disabled = false;
     status.innerText = '';
   }
@@ -156,15 +156,15 @@
   convertBtn.addEventListener('click', async () => {
     if (!selectedFile) return;
     convertBtn.disabled = true;
-    status.innerText = '正在读取文件...';
+    status.innerText = 'Reading file...';
 
     try {
       const arrayBuffer = await selectedFile.arrayBuffer();
-      status.innerText = '解码音轨中...';
+      status.innerText = 'Decoding audio track...';
       const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       const decodedData = await audioCtx.decodeAudioData(arrayBuffer);
       
-      status.innerText = '打包下载中...';
+      status.innerText = 'Preparing download...';
       const wavBlob = audioBufferToWav(decodedData);
       
       const a = document.createElement('a');
@@ -174,9 +174,9 @@
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-      status.innerText = '✅ 转换搞定，已下载！';
+      status.innerText = '✅ Converted successfully, downloaded!';
     } catch (err) {
-      status.innerText = '❌ 转换失败，影片格式可能有问题。';
+      status.innerText = '❌ Conversion failed. Video format might be unsupported.';
     } finally {
       convertBtn.disabled = false;
     }
